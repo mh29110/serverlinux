@@ -1,12 +1,11 @@
 #pragma once
 
 #include "NetworkData.h"
-//#include "ServerResource.h"
-#include "ServletManager.h"
-#include "ServerNetwork.h"
 #include "global.h"
 #include <stdio.h>
 class ServerResource;
+class ServletManager;
+class ServerNetwork;
 
 class PlayerSession
 {
@@ -16,9 +15,9 @@ public:
 	~PlayerSession(void);
 	
 	//process the packet from  specific socket client 
-	void processPacket(Packet packet);
+	void processPacket(Packet& packet);
 	
-
+    ServerNetwork* network(){ return m_network; }
 
 	SOCKET m_sockId ;
 private:

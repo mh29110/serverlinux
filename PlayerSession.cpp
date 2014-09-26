@@ -1,5 +1,8 @@
 #include "PlayerSession.h"
 
+#include "ServerResource.h"
+#include "ServletManager.h"
+#include "ServerNetwork.h"
   
 PlayerSession::PlayerSession(SOCKET sock,ServerResource* res,ServletManager* servs, ServerNetwork* network)
 							 :m_sockId(sock)
@@ -11,30 +14,10 @@ PlayerSession::PlayerSession(SOCKET sock,ServerResource* res,ServletManager* ser
 	m_network = network;
 }
 
-void PlayerSession::processPacket(Packet packet)
+void PlayerSession::processPacket(Packet& packet)
 {
-	   switch (packet.packet_type) {
-
-                case INIT_CONNECTION:
-					printf("server received init packet from client;: %s\n",packet.words);
-					m_network->broadcast("this is a system broadcast ,welcome to this world!\n");				
-                    break;
-
-                case BROAD_CAST:
-
-                    printf("server received broad cast!%s\n" ,packet.words);
-					//broadcast(packet.words,iter->first);
-                    break;
-				case WISPER:
-					m_servlets->m_chat->processWisper(packet,m_res,m_network);
-					break;
-                default:
-
-                    printf("error in packet types\n");
-
-                    break;
-            }
-}
+    m_servlets->allotServlet(packet , m_res , this);
+	 }
 
 
 PlayerSession::~PlayerSession(void)

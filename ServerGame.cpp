@@ -73,5 +73,12 @@ void ServerGame::receiveFromClients()
 
 ServerGame::~ServerGame(void)
 {
+    delete  network ; 
+
+    delete	m_res ;
+
+    delete	m_servlets;
+
+    //todo delete sessions //todo
 }
 

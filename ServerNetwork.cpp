@@ -101,7 +101,7 @@ void ServerNetwork::sendToAll(char * packets, int totalSize)
 		currentSocket = iter->second;
         iSendResult = NetworkService::sendMessage(currentSocket, packets, totalSize);
 
-        if (iSendResult == -1) 
+        if (iSendResult == SOCKET_ERROR) 
         {
             printf("send failed with error: %d\n", -1);
 //            closesocket(currentSocket);
