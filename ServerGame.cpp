@@ -56,6 +56,7 @@ void ServerGame::receiveFromClients()
             //no data recieved
             continue;
         }
+        printf("data length = %d \n", data_length);
 
         int i = 0;
         while (i < (unsigned int)data_length) 
@@ -63,8 +64,11 @@ void ServerGame::receiveFromClients()
             packet.deserialize(&(network_data[i]));
             i += sizeof(Packet);
 
+            printf( " find the processer \n");
+
            if( sessions.find(iter->first) !=  sessions.end() )
 			{
+                printf("process packet! \n");
 				sessions[iter->first]->processPacket(packet);
 		    }
         }

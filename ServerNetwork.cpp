@@ -96,10 +96,14 @@ void ServerNetwork::sendToAll(char * packets, int totalSize)
     std::map<unsigned int,  SOCKET>::iterator iter;
     int iSendResult;
 
+    printf("send to all! \n");
+    int c = 0;
     for (iter = sessions.begin(); iter != sessions.end(); iter++)
     {
 		currentSocket = iter->second;
         iSendResult = NetworkService::sendMessage(currentSocket, packets, totalSize);
+        printf("send to all! %d \n!" ,c);
+        c++;
 
         if (iSendResult == SOCKET_ERROR) 
         {
