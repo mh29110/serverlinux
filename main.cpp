@@ -13,9 +13,9 @@ int main()
 	server = new ServerGame();
     serverLoop();
 }
-void serverLoop() 
-{ 
-    while(true) 
+void serverLoop()
+{
+    while(true)
     {
         server->update();
     }

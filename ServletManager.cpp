@@ -16,7 +16,8 @@ bool ServletManager::allotServlet(Packet& packet, ServerResource* res ,PlayerSes
         {
             printf("server received init packet from client;: %s\n",packet.words);
             char content[] = "this is a system broadcast ,welcome to this world!\n";
-            session->network()->broadcast(content);				
+            session->network()->broadcast(content);
+            printf("init message!");
             break;
         }
         case BROAD_CAST:

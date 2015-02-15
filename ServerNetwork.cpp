@@ -2,6 +2,7 @@
 #include <memory.h>
 #include <errno.h>
 #include <stdio.h>
+#include <fcntl.h>
 
 ServerNetwork::ServerNetwork(void)
 {
@@ -10,8 +11,7 @@ ServerNetwork::ServerNetwork(void)
 
     memset( &m_addr, 0 , sizeof(m_addr) ) ;
 
-    
-    ListenSocket = socket(AF_INET, SOCK_STREAM , 0) ;  
+    ListenSocket = socket(AF_INET, SOCK_STREAM , 0) ;
     if (ListenSocket == -1) {
        // printf("startup failed with error: \n");
        // exit(1);
@@ -40,9 +40,13 @@ ServerNetwork::ServerNetwork(void)
 
     if (iResult == SOCKET_ERROR) {
         //exit(1);
+        printf("result failed with error: %d\n", -2);
         return;
     }
-    
+    int flag ;
+    flag = fcntl(ListenSocket, F_GETFL,0);
+    fcntl( ListenSocket , F_SETFL , flag|O_NONBLOCK);
+
     printf("socket inited!\n");
 
 }
@@ -51,15 +55,16 @@ ServerNetwork::ServerNetwork(void)
 bool ServerNetwork::acceptNewClient(SOCKET & id)
 {
     // if client waiting, accept the connection and save the socket
-    id = accept(ListenSocket,NULL,NULL);
+    socklen_t len;
+    len = sizeof(m_addr);
+    id = accept(ListenSocket,(struct sockaddr *)&m_addr,&len);
 
-    if (id != -1) 
+    if (id != -1)
     {
         //disable nagle on the client's socket
         //char value = 1;
         //setsockopt( id, IPPROTO_TCP, TCP_NODELAY, &value, sizeof( value ) );
 
-      
 		ClientSocket = id;
         return true;
     }
@@ -81,13 +86,13 @@ int ServerNetwork::receiveData(unsigned int client_id, char * recvbuf)
         iResult = NetworkService::receiveMessage(currentSocket, recvbuf, MAX_PACKET_SIZE);
         if (iResult == 0)
         {
-            printf("Connection closed\n");
-//            closesocket(currentSocket);
+            //printf("Connection closed\n");
+            //closesocket(currentSocket);
         }
         return iResult;
     }
     return 0;
-} 
+}
 
 // send data to all clients
 void ServerNetwork::sendToAll(char * packets, int totalSize)
